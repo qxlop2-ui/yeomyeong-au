@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>여명 시작 (Yeomyeong Sijak) v2.0</title>
-    <!-- 폰트 및 라이브러리 -->
+    <title>여명 시작 (Yeomyeong Sijak) v2.5</title>
     <link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
+        /* 세기말 & 저채도 윈도우 테마 */
         :root {
-            --win-bg: #008080;
-            --win-grey: #c0c0c0;
-            --win-white: #ffffff;
-            --win-dark: #808080;
-            --win-blue: #000080;
-            --win-black: #000000;
+            --win-bg: #2b3a3a; /* 채도를 낮춘 짙은 청록/그레이 */
+            --win-grey: #b0b0b0; /* 약간 톤다운된 회색 */
+            --win-white: #d1d1d1;
+            --win-dark: #5a5a5a;
+            --win-blue: #324664; /* 눈이 편안한 다크 블루 */
+            --win-black: #1a1a1a;
+            --win-accent: #8e9eab;
         }
 
         body {
@@ -22,162 +23,218 @@
             font-family: 'Noto Sans KR', sans-serif;
             margin: 0; padding: 20px;
             display: flex; flex-direction: column; align-items: center;
+            color: #1a1a1a;
         }
 
-        /* 윈도우 스타일 */
         .window {
             width: 850px;
             background: var(--win-grey);
             border: 2px solid;
             border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
-            box-shadow: 2px 2px 0 var(--win-black);
+            box-shadow: 3px 3px 0 var(--win-black);
             margin-bottom: 20px;
         }
 
         .title-bar {
-            background: linear-gradient(90deg, var(--win-blue), #1084d0);
-            padding: 3px 5px;
+            background: linear-gradient(90deg, var(--win-blue), #526687);
+            padding: 4px 6px;
             display: flex; justify-content: space-between; align-items: center;
-            color: white; font-weight: bold; font-size: 14px;
+            color: #e0e0e0; font-weight: bold; font-size: 13px;
+            letter-spacing: 1px;
         }
 
-        .content { padding: 15px; }
+        .content { padding: 20px; }
 
-        /* 입력창 스타일 */
-        .input-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; }
+        /* 입력창 디자인 */
+        .input-section { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #333; }
+        
         input, textarea {
             width: 100%; box-sizing: border-box;
             border: 2px solid; border-color: var(--win-dark) var(--win-white) var(--win-white) var(--win-dark);
-            padding: 8px; font-size: 14px; outline: none;
+            padding: 10px; font-size: 14px; outline: none;
+            background-color: #e8e8e8;
         }
-        textarea { height: 100px; resize: none; }
+        textarea { height: 110px; resize: none; line-height: 1.5; }
 
-        /* AU 리스트박스 */
-        .au-box {
-            background: white; border: 2px solid; 
+        /* AU 버튼 그리드 방식 */
+        .au-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .au-btn {
+            padding: 8px 4px;
+            background: var(--win-grey);
+            border: 2px solid;
+            border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.1s;
+            white-space: nowrap;
+        }
+
+        .au-btn:hover { background: #c0c0c0; }
+        .au-btn.active {
+            background: var(--win-blue);
+            color: white;
             border-color: var(--win-dark) var(--win-white) var(--win-white) var(--win-dark);
-            height: 120px; overflow-y: scroll; padding: 5px; margin-bottom: 15px;
+            transform: translate(1px, 1px);
         }
-        .au-item { padding: 4px 8px; font-size: 13px; cursor: pointer; }
-        .au-item:hover { background: #eee; }
-        .au-item.active { background: var(--win-blue); color: white; }
 
-        /* 버튼 */
-        .btn-group { text-align: center; margin-top: 10px; }
+        /* 컨트롤 버튼 그룹 */
+        .btn-group { 
+            display: flex; justify-content: center; gap: 15px; 
+            margin-top: 10px; padding: 15px; border-top: 1px solid #999;
+        }
+
         .win-btn {
-            padding: 8px 25px; background: var(--win-grey);
+            padding: 10px 25px;
+            background: var(--win-grey);
+            border: 2px solid;
+            border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
+            cursor: pointer;
+            font-family: 'Silkscreen', cursive;
+            font-size: 14px;
+            box-shadow: 1px 1px 0 var(--win-black);
+        }
+
+        .win-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: none;
+            border-color: var(--win-dark) var(--win-white) var(--win-white) var(--win-dark);
+        }
+
+        .random-btn { background-color: #9eabb3; }
+
+        /* 결과 화면 */
+        #captureArea { margin-top: 40px; display: none; }
+        .result-window { 
+            width: 650px; margin: 0 auto; background: var(--win-grey); 
             border: 2px solid; border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white);
-            cursor: pointer; font-family: 'Silkscreen', cursive; box-shadow: 1px 1px 0 var(--win-black);
         }
-        .win-btn:active { transform: translate(1px, 1px); box-shadow: none; border-color: var(--win-dark) var(--win-white) var(--win-white) var(--win-dark); }
-
-        /* 결과 창 (이미지 캡처 대상) */
-        #captureArea {
-            margin-top: 30px; display: none;
+        .result-body { 
+            padding: 30px; background: #f4f4f4; margin: 6px; 
+            border: 2px solid #888 inset; min-height: 350px; 
         }
-        .result-window { width: 600px; margin: 0 auto; background: var(--win-grey); border: 2px solid; border-color: var(--win-white) var(--win-dark) var(--win-dark) var(--win-white); }
-        .result-body { padding: 25px; background: white; margin: 5px; border: 2px solid inset; min-height: 300px; }
-        .story-p { line-height: 1.8; margin-bottom: 15px; font-size: 15px; color: #333; }
-        .story-tag { font-weight: bold; color: var(--win-blue); margin-right: 10px; font-size: 12px; }
+        .story-p { line-height: 1.9; margin-bottom: 20px; font-size: 15px; color: #222; }
+        .story-tag { 
+            display: inline-block; width: 45px; font-weight: bold; 
+            color: var(--win-blue); border-right: 2px solid var(--win-blue); 
+            margin-right: 12px; font-size: 13px;
+        }
 
-        .footer-note { font-size: 11px; color: #555; text-align: center; margin-top: 50px; }
+        .footer-note { font-size: 11px; color: #7f8c8d; text-align: center; margin-top: 60px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
 <div class="window">
     <div class="title-bar">
-        <span><i class="fas fa-moon"></i> 여명 시작 (Yeomyeong Sijak) v2.0</span>
-        <div style="display:flex; gap:2px;">
-            <button class="win-btn" style="padding:1px 5px; font-size:10px;">?</button>
-            <button class="win-btn" style="padding:1px 5px; font-size:10px;">X</button>
+        <span><i class="fas fa-microchip"></i> 여명 시작 (YEOMYEONG_SIJAK) - V2.5.EXE</span>
+        <div style="display:flex; gap:3px;">
+            <button class="win-btn" style="padding:1px 6px; font-size:9px;">?</button>
+            <button class="win-btn" style="padding:1px 6px; font-size:9px;">×</button>
         </div>
     </div>
     <div class="content">
         <div class="input-section">
             <div>
-                <label>CHARACTER A</label>
-                <input type="text" id="nameA" placeholder="이름">
-                <textarea id="descA" style="margin-top:5px;" placeholder="그의 성격, 외양, 그리고 숨겨진 열망을 서술하세요..."></textarea>
+                <label>SUBJECT_A: NAME & TRAITS</label>
+                <input type="text" id="nameA" placeholder="이름을 입력하세요">
+                <textarea id="descA" style="margin-top:6px;" placeholder="캐릭터의 핵심 성격과 서술을 적어주세요. 길게 적을수록 문장이 풍부해집니다."></textarea>
             </div>
             <div>
-                <label>CHARACTER B</label>
-                <input type="text" id="nameB" placeholder="이름">
-                <textarea id="descB" style="margin-top:5px;" placeholder="그녀의 분위기, 습관, 그리고 지울 수 없는 상처를 서술하세요..."></textarea>
+                <label>SUBJECT_B: NAME & TRAITS</label>
+                <input type="text" id="nameB" placeholder="이름을 입력하세요">
+                <textarea id="descB" style="margin-top:6px;" placeholder="상대 캐릭터의 특징을 적어주세요. 그가 가진 결핍이나 분위기를 서술하세요."></textarea>
             </div>
         </div>
 
-        <label>RELATIONSHIP (관계를 정의하는 문장)</label>
-        <textarea id="relation" style="height:60px;" placeholder="두 사람 사이에 흐르는 공기, 혹은 피할 수 없는 운명을 서술하세요."></textarea>
+        <label>CORE_RELATIONSHIP (서사의 중심축)</label>
+        <textarea id="relation" style="height:65px;" placeholder="두 사람을 묶는 운명의 형태를 서술하세요. (예: 구원, 파멸, 증오, 짝사랑 등)"></textarea>
 
-        <label style="margin-top:15px;">AU INJECTION (테마 선택)</label>
-        <div class="au-box" id="auList"></div>
+        <label style="margin-top:20px;">AU_SELECT (평행세계 선택)</label>
+        <div class="au-grid" id="auGrid"></div>
 
         <div class="btn-group">
-            <button class="win-btn" onclick="generateStory()">EXECUTE_GENERATE</button>
+            <button class="win-btn random-btn" onclick="selectRandomAU()">LUCKY_RANDOM</button>
+            <button class="win-btn" style="background-color: #6c8ea4; color: white;" onclick="generateStory()">START_GENERATE</button>
         </div>
     </div>
 </div>
 
-<!-- 결과 출력 및 캡처 영역 -->
 <div id="captureArea">
     <div class="result-window" id="resultWin">
         <div class="title-bar">
-            <span id="resultTitle">RESULT_STORY.txt</span>
+            <span id="resultTitle">STORY_LOG.txt</span>
         </div>
-        <div class="result-body" id="storyOutput">
-            <!-- 시나리오가 기승전결로 출력됨 -->
-        </div>
+        <div class="result-body" id="storyOutput"></div>
     </div>
     <div class="btn-group">
-        <button class="win-btn" style="background:#ffeb3b" onclick="saveAsImage()">SAVE_AS_IMAGE (.PNG)</button>
+        <button class="win-btn" style="background:#8e9eab" onclick="saveAsImage()">DOWNLOAD_RESULT (.PNG)</button>
     </div>
 </div>
 
 <div class="footer-note">
-    SYSTEM: 여명 시작은 당신의 서사를 기반으로 평행세계를 연산합니다.<br>
-    Copyright 2024 Yeomyeong Project. All rights reserved.
+    [SYSTEM] 당신의 서사를 기반으로 다중 세계관을 연산 중입니다...<br>
+    © 2024 Yeomyeong Project. Low-Saturation Edition.
 </div>
 
 <script>
     const auData = [
-        { title: "히어로 & 빌런", theme: "대립과 파멸" },
-        { title: "네임버스", theme: "운명의 각인" },
-        { title: "가이드버스", theme: "정신적 구속" },
-        { title: "오메가버스", theme: "본능의 굴레" },
-        { title: "사이버펑크", theme: "기계적 비극" },
-        { title: "아포칼립스", theme: "마지막 생존" },
-        { title: "동양풍 고전", theme: "애증의 연대기" },
-        { title: "마피아 느와르", theme: "배신과 신뢰" },
-        { title: "캠퍼스 로맨스", theme: "찰나의 청춘" },
-        { title: "탐정 & 범인", theme: "추적의 끝" },
-        { title: "성지순례 여행", theme: "낯선 안도감" },
-        { title: "스팀펑크", theme: "태엽의 고동" },
-        { title: "호러/미스터리", theme: "폐쇄된 공포" },
-        { title: "아이돌 & 팬", theme: "가상의 사랑" },
-        { title: "판타지 모험", theme: "검과 마법" },
-        { title: "디스토피아", theme: "통제된 평화" },
-        { title: "의학 드라마", theme: "생사의 갈림길" },
-        { title: "무인도 조난", theme: "원초적 본능" },
-        { title: "시간여행", theme: "인과율의 오류" },
-        { title: "베이커리 일상", theme: "달콤한 휴식" }
+        { title: "히어로&빌런", theme: "정의와 악의 경계" },
+        { title: "네임버스", theme: "신체에 새겨진 운명" },
+        { title: "가이드버스", theme: "각인과 구원" },
+        { title: "오메가버스", theme: "형질의 굴레" },
+        { title: "사이버펑크", theme: "기계와 인간성" },
+        { title: "아포칼립스", theme: "멸망 속의 유대" },
+        { title: "동양풍 고전", theme: "시대를 넘은 비극" },
+        { title: "마피아 느와르", theme: "배신과 그림자" },
+        { title: "캠퍼스물", theme: "부서지는 청춘" },
+        { title: "탐정&범인", theme: "추적의 미학" },
+        { title: "성지순례", theme: "낯선 길 위의 안식" },
+        { title: "스팀펑크", theme: "태엽과 증기" },
+        { title: "호러/괴담", theme: "잠식되는 공포" },
+        { title: "아이돌&팬", theme: "우상의 이면" },
+        { title: "판타지 모험", theme: "끝나지 않는 여정" },
+        { title: "디스토피아", theme: "통제된 유토피아" },
+        { title: "의학/병원", theme: "삶의 끝자락" },
+        { title: "무인도", theme: "본능의 시간" },
+        { title: "시간여행", theme: "어긋난 타임라인" },
+        { title: "베이커리", theme: "일상의 조각" }
     ];
 
     let selectedIdx = -1;
-    const auListDiv = document.getElementById('auList');
+    const gridDiv = document.getElementById('auGrid');
 
+    // AU 버튼 그리드 생성
     auData.forEach((au, i) => {
-        const item = document.createElement('div');
-        item.className = 'au-item';
-        item.innerText = `${i+1}. ${au.title} (${au.theme})`;
-        item.onclick = () => {
-            document.querySelectorAll('.au-item').forEach(el => el.classList.remove('active'));
-            item.classList.add('active');
+        const btn = document.createElement('div');
+        btn.className = 'au-btn';
+        btn.innerText = au.title;
+        btn.onclick = () => {
+            document.querySelectorAll('.au-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
             selectedIdx = i;
         };
-        auListDiv.appendChild(item);
+        gridDiv.appendChild(btn);
     });
+
+    // 랜덤 선택 기능
+    function selectRandomAU() {
+        const btns = document.querySelectorAll('.au-btn');
+        const rand = Math.floor(Math.random() * auData.length);
+        btns[rand].click();
+        
+        // 시각적 피드백: 랜덤 버튼 깜빡임 효과
+        const rBtn = document.querySelector('.random-btn');
+        rBtn.style.background = '#324664';
+        setTimeout(() => rBtn.style.background = '#9eabb3', 100);
+    }
 
     function generateStory() {
         const nA = document.getElementById('nameA').value;
@@ -187,19 +244,20 @@
         const rel = document.getElementById('relation').value;
 
         if(!nA || !nB || selectedIdx === -1) {
-            alert("캐릭터 이름과 AU 테마는 필수입니다!");
+            alert("캐릭터 이름과 AU 선택은 필수입니다.");
             return;
         }
 
         const au = auData[selectedIdx].title;
+        const theme = auData[selectedIdx].theme;
         const output = document.getElementById('storyOutput');
         
-        // 서사 직조 로직 (기승전결)
+        // 서술형 강화를 위한 로직 (사용자 입력 문장 활용)
         const story = [
-            { tag: "起 (기)", text: `${au}의 세계, ${dA} 특징을 가진 ${nA}는 평소처럼 침묵을 지키고 있었다. 하지만 그 앞에 ${dB} 분위기의 ${nB}가 나타나며 정적은 깨진다.` },
-            { tag: "承 (승)", text: `두 사람은 본래 ${rel}라는 지독한 관계였다. ${nA}는 자신의 본능을 억누르려 했으나, ${nB}가 던진 결정적인 한 마디가 모든 상황을 뒤흔들기 시작한다.` },
-            { tag: "轉 (전)", text: `결국 예기치 못한 사건이 터진다. ${au} 테마의 가혹한 환경 속에서 ${nA}는 ${nB}를 구하기 위해(혹은 파괴하기 위해) 자신의 가장 소중한 것을 내던지는 선택을 한다.` },
-            { tag: "結 (결)", text: `먼지가 가라앉은 뒤, 남은 것은 오직 두 사람뿐이다. ${nA}와 ${nB}는 서로를 바라보며, 이제는 되돌릴 수 없는 새로운 형태의 ${rel}를 받아들이기로 한다.` }
+            { tag: "起", text: `${theme}의 공기가 흐르는 ${au}의 세계. ${dA} 눈빛을 지닌 ${nA}는 소음 없는 일상을 보내고 있었다. 하지만 그 고요를 찢고 ${dB} 분위기의 ${nB}가 나타나며 균열이 시작된다.` },
+            { tag: "承", text: `본래 두 사람은 ${rel}라는 뗄 수 없는 굴레에 묶여 있었다. ${nA}는 애써 외면하려 했으나, ${nB}가 보여준 예상치 못한 행동은 ${rel}의 의미를 다시금 새기게 만든다.` },
+            { tag: "轉", text: `운명은 가혹했다. ${au}의 법칙이 두 사람을 벼랑 끝으로 몰아넣었을 때, ${nA}는 ${nB}를 위해(혹은 자신을 위해) 돌이킬 수 없는 결단을 내린다. ${nA}의 서술된 성격이 그 선택을 증명하고 있었다.` },
+            { tag: "結", text: `폭풍이 지나간 뒤, ${nA}와 ${nB} 사이에는 오직 무거운 정적만이 남는다. 이제 그들에게 남은 것은 이전과는 다른 새로운 형태의 ${rel}이며, 그것이 두 사람이 맞이할 ${au}의 결말이다.` }
         ];
 
         output.innerHTML = story.map(s => `
@@ -208,16 +266,16 @@
             </div>
         `).join('');
 
-        document.getElementById('resultTitle').innerText = `${nA}_X_${nB}_${au}.log`;
+        document.getElementById('resultTitle').innerText = `${nA}_X_${nB}_LOG.txt`;
         document.getElementById('captureArea').style.display = 'block';
         window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
     function saveAsImage() {
         const target = document.getElementById('resultWin');
-        html2canvas(target).then(canvas => {
+        html2canvas(target, { backgroundColor: '#2b3a3a' }).then(canvas => {
             const link = document.createElement('a');
-            link.download = 'Yeomyeong_Result.png';
+            link.download = `YEOMYEONG_LOG_${Date.now()}.png`;
             link.href = canvas.toDataURL();
             link.click();
         });
